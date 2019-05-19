@@ -2,6 +2,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <AzureFunctionsVersion>v2</AzureFunctionsVersion>
+    <DisableFunctionExtensionVersionUpdate>true</DisableFunctionExtensionVersionUpdate>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="8.1.0" />
