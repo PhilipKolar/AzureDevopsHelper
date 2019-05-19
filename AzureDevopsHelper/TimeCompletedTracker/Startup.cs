@@ -16,7 +16,7 @@ namespace AzureDevopsHelper.Startup //Don't try to fix this it breaks azure func
     public class Startup
     {
         [FunctionName("Startup")]
-        public static void Run([TimerTrigger("0 55 8 * * 1-5", RunOnStartup = true)] TimerInfo timer, ILogger log, ExecutionContext context)
+        public static void Run([TimerTrigger("0 55 8 * * 1-5"/*, RunOnStartup = true*/)] TimerInfo timer, ILogger log, ExecutionContext context)
         {
             log.LogInformation($"{nameof(AzureDevopsHelper)} Timer trigger function executed at: {DateTime.UtcNow}");
             var config = InitConfig(context);
