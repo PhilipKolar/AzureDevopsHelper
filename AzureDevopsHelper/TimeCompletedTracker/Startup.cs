@@ -15,7 +15,7 @@ namespace AzureDevopsHelper.Startup //Don't try to fix this it breaks azure func
 {
     public class Startup
     {
-        [FunctionName("Startup")]
+        [FunctionName("TimeCompletedTracker")]
         public static void Run([TimerTrigger("0 55 8 * * 1-5"/*, RunOnStartup = true*/)] TimerInfo timer, ILogger log, ExecutionContext context)
         {
             log.LogInformation($"{nameof(AzureDevopsHelper)} Timer trigger function executed at: {DateTime.UtcNow}");
@@ -61,7 +61,7 @@ namespace AzureDevopsHelper.Startup //Don't try to fix this it breaks azure func
         {
             var config = new ConfigurationBuilder()
                 .SetBasePath(context.FunctionAppDirectory)
-                .AddJsonFile("local.settings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile("local.settings.json", optional: true, reloadOnChange: true)
                 .AddEnvironmentVariables()
                 .Build();
 
