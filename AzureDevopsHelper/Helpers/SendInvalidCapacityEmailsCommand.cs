@@ -35,7 +35,7 @@ namespace AzureDevopsHelper.Helpers
             MailMessage mail = new MailMessage(_config.EmailCredentialsUserName, member.Email);
             mail.Subject = $"Completed Hours Mismatch - {member.CurrentCapacity}/{member.CorrectCapacity}";
             mail.Body = $"Hi {displayName},\n\n" +
-                        $"Your completed hours in {_config.TeamName} are {member.CurrentCapacity}, but you should have {member.CorrectCapacity} hours as of {DateTime.Today.AddDays(-1):yyyy/MM/dd}.\n\n" +
+                        $"Your completed hours are {member.CurrentCapacity}, but you should have {member.CorrectCapacity} hours as of {DateTime.Today.AddDays(-1):yyyy/MM/dd}.\n\n" +
                         $"Please note that public holidays, annual leave, sick leave, and all other leave should be counted towards your completed hours.\n\n" +
                         $"Beep Boop";
 

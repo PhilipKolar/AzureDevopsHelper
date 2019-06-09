@@ -6,6 +6,7 @@ using AzureDevopsHelper.AzureModels.Objects;
 using AzureDevopsHelper.Constant;
 using AzureDevopsHelper.RequestModels;
 using AzureDevopsHelper.ResponseModels;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace AzureDevopsHelper.Helpers
@@ -13,16 +14,18 @@ namespace AzureDevopsHelper.Helpers
     public class GetCorrectCapacityQuery
     {
         private readonly ConfigContainer _config;
+        private readonly ILogger _logger;
 
-        public GetCorrectCapacityQuery(ConfigContainer config)
+        public GetCorrectCapacityQuery(ConfigContainer config, ILogger logger)
         {
             _config = config;
+            _logger = logger;
         }
 
         public async Task<GetCorrectCapacityQueryResponse> RunRequestAsync(GetCorrectCapacityQueryRequest queryRequest)
         {
             var httpHelper = new HttpHelper(_config);
-            var responseString = await httpHelper.GetResponseAsync($"{Constants.BaseAzureDevopsUri}/{_config.OrganisationName}/{_config.ProjectName}/{_config.TeamName}" +
+            var responseString = await httpHelper.GetResponseAsync($"{Constants.BaseAzureDevopsUri}/{_config.OrganisationName}/{_config.ProjectName}/{queryRequest.TeamName}" +
                                                                    $"/_apis/work/teamsettings/iterations/{queryRequest.IterationId}/capacities?api-version={_config.AzureDevopsApiVersion}");
 
             var response = JsonConvert.DeserializeObject<GetIterationCapacitiesList>(responseString);
@@ -31,6 +34,8 @@ namespace AzureDevopsHelper.Helpers
             {
                 MemberCapacities = response.Value.Select(x => GetMemberCapacity(x, queryRequest.IterationStartDate, effectiveCurrentDate)).ToList()
             };
+
+            _logger.LogInformation($"Correct capacities response model: {JsonConvert.SerializeObject(responseModel)}");
 
             return responseModel;
         }

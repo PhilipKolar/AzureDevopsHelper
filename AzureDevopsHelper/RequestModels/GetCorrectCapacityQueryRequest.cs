@@ -6,6 +6,7 @@ namespace AzureDevopsHelper.RequestModels
 {
     public class GetCorrectCapacityQueryRequest
     {
+        public string TeamName { get; set; }
         public string IterationId { get; set; }
         public DateTime IterationStartDate { get; set; }
         public DateTime IterationEndDate { get; set; }
