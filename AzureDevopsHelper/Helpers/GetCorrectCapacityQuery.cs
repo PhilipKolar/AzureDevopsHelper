@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AzureDevopsHelper.AzureModels;
@@ -27,8 +28,22 @@ namespace AzureDevopsHelper.Helpers
             var httpHelper = new HttpHelper(_config);
             var responseString = await httpHelper.GetResponseAsync($"{Constants.BaseAzureDevopsUri}/{_config.OrganisationName}/{_config.ProjectName}/{queryRequest.TeamName}" +
                                                                    $"/_apis/work/teamsettings/iterations/{queryRequest.IterationId}/capacities?api-version={_config.AzureDevopsApiVersion}");
-
             var response = JsonConvert.DeserializeObject<GetIterationCapacitiesList>(responseString);
+            var teamDaysResponseString = await httpHelper.GetResponseAsync($"{Constants.BaseAzureDevopsUri}/{_config.OrganisationName}/{_config.ProjectName}/{queryRequest.TeamName}" +
+                                                                   $"/_apis/work/teamsettings/iterations/{queryRequest.IterationId}/teamdaysoff?api-version={_config.AzureDevopsApiVersion}");
+            var teamDaysResponse = JsonConvert.DeserializeObject<GetIterationTeamDaysOff>(teamDaysResponseString);
+            foreach (var person in response.Value)
+            {
+                if (person.DaysOff == null)
+                {
+                    person.DaysOff = new List<CapacityDateRange>();
+                }
+                if (teamDaysResponse.DaysOff != null)
+                {
+                    person.DaysOff.AddRange(teamDaysResponse.DaysOff);
+                }
+            }
+
             var effectiveCurrentDate = DateTime.Today > queryRequest.IterationEndDate ? queryRequest.IterationEndDate : DateTime.Today;
             var responseModel = new GetCorrectCapacityQueryResponse
             {
